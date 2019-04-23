@@ -44,3 +44,15 @@ def comment_create(request, music_pk):
     if serializer.is_valid(raise_exception=True):
         serializer.save(music_id=music_pk)
         return Response(serializer.data)
+        
+@api_view(['PUT', 'DELETE'])
+def comment_update_and_delete(request, music_pk, comment_pk):
+    comment = get_object_or_404(Comment, pk=comment_pk)
+    if request.method == 'PUT':
+        serializer = CommentSerializer(data=request.data, instance=comment)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response({'message': 'Comment has been updated!!'})
+    else:
+        comment.delete()
+        return Response({'message': 'Comment has been deleted!!'})
